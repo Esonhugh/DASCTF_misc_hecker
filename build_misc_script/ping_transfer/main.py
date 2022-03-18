@@ -152,7 +152,7 @@ def ping(addr,sendfile):
     seq = 1
     for payload in magic2:
         send_once(sock,addr,ident,payload,seq)
-        print(payload)
+        # print(payload)
         seq += 1
 
     # sender thread stop flag
@@ -179,7 +179,7 @@ def ping(addr,sendfile):
     # clean sender thread
     # sender.join()
 
-    print()
+    print("Successful")
 
 if __name__ == '__main__':
     lens = sys.argv.__len__()
