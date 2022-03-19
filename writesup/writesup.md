@@ -29,6 +29,11 @@ Wireshark dump file with traffic with ping transfer file and something with webs
 ```
 
 
+## 需要工具
+
+Wireshark - 用于分析流量包
+
+Jenkins cred 解密工具 - 用于取出 sshkey
 
 ## 详细步骤
 
