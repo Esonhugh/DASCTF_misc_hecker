@@ -39,7 +39,7 @@ Jenkins cred 解密工具 - 用于取出 sshkey
 
 首先你会先拿到一个 wireshark 抓包的结果
 
-![image-20220318174909872](./writesup.assets/image-20220318174909872.png)
+![](https://c.img.dasctf.com/images/202246/1649222583346-de732512-2896-4ad7-8444-b5bbc1a6d1b1.png)
 
 经过简单的查看整个过程的流量可以发现以下几点
 
@@ -48,7 +48,7 @@ Jenkins cred 解密工具 - 用于取出 sshkey
 
 简单的进行 过滤一下 发现
 
-![image-20220318175759019](./writesup.assets/image-20220318175759019.png)
+![image-20220318175759019](https://c.img.dasctf.com/images/202246/1649222640678-efc8112b-41ca-467f-bdbe-afb5aa39b158.png)
 
 可以发现 有 webshell 类的交互
 
@@ -60,7 +60,7 @@ Jenkins cred 解密工具 - 用于取出 sshkey
 - echo HACKED  BY 99BIE > readme.txt
 - cat readme.txt
 
-![image-20220318180256447](./writesup.assets/image-20220318180256447.png)
+![image-20220318180256447](https://c.img.dasctf.com/images/202246/1649222672390-ead87149-cd61-492a-9f5f-6ee48f72f227.png)
 
 核心需要关注的 是这几条记录 可以发现 
 
@@ -68,20 +68,20 @@ backdoor 这里加入了 jenkins_secret.zip 之后 response 和 request 间隔�
 
 观察其请求 可以发现 通讯信息就是简简单单的 base64 encode 而已
 
-![image-20220318180558771](./writesup.assets/image-20220318180558771.png)
+![image-20220318180558771](https://c.img.dasctf.com/images/202246/1649222769302-8018e477-fd8d-47ab-aabc-251abd8f38d9.png)
 
 ```
 STDERR: VHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOgogIEZpbGUgIi9zZXJ2ZXIvbWFpbi5weSIsIGxpbmUgMTkzLCBpbiA8bW9kdWxlPgogICAgcGluZyhzeXMuYXJndlsxXSwgc3lzLmFyZ3ZbMl0pCkluZGV4RXJyb3I6IGxpc3QgaW5kZXggb3V0IG9mIHJhbmdlCg==
 STDOUT: VXNhZ2U6IG1haW4ucHkge2lwfSB7c2VuZGZpbGV9ClVzYWdlOiBtYWluLnB5IHtpcH0ge3NlbmRmaWxlfSB7cmF0ZWxpbWl0IChzZWNvbmQpfQo=
 ```
 
-![image-20220318180826208](./writesup.assets/image-20220318180826208.png)
+![](https://c.img.dasctf.com/images/202246/1649222879812-0c653098-8112-4a89-91ce-40a6558ed22d.png)
 
 然后顺势解密其他的 流量信息
 
 还有 ping 这里有一处信息之后用到 先记录一下
 
-![image-20220318180055369](./writesup.assets/image-20220318180055369.png)
+![image-20220318180055369](https://c.img.dasctf.com/images/202246/1649222981244-9b79e9f7-8dcf-4ba9-a514-c70ebfc5ee81.png)
 
 可以看到 `Esonhugh @github` 和 ` Esonhugh/secret_source_code` 等字样
 
@@ -91,17 +91,17 @@ STDOUT: VXNhZ2U6IG1haW4ucHkge2lwfSB7c2VuZGZpbGV9ClVzYWdlOiBtYWluLnB5IHtpcH0ge3Nl
 
 发现 有很多的 icmp 流量发送出来
 
-![image-20220318181144775](./writesup.assets/image-20220318181144775.png)
+![image-20220318181144775](https://c.img.dasctf.com/images/202246/1649223020977-b03218ec-41b1-42ec-ba85-8941e6fa1df6.png)
 
 有一个 ident 为 0x0087 开始的全新 ICMP 流量段出现
 
-![image-20220318181416542](./writesup.assets/image-20220318181416542.png)
+![image-20220318181416542](https://c.img.dasctf.com/images/202246/1649223064207-c62cb149-5188-4b84-a8ce-b4088ee26203.png)
 
 并且 ident=0x0087 的 ICMP 结束之后 2s 我们 收到了 HTTP response ok
 
 看 webshell 可以发现 应该是发送了一个 zip 包回来 
 
-![image-20220318181653682](./writesup.assets/image-20220318181653682.png)
+![image-20220318181653682](https://c.img.dasctf.com/images/202246/1649223098749-53c2c895-e5bb-4c72-9761-43470649de2f.png)
 
 细看 PK 头 还有 压缩包内的内容
 
@@ -113,7 +113,7 @@ STDOUT: VXNhZ2U6IG1haW4ucHkge2lwfSB7c2VuZGZpbGV9ClVzYWdlOiBtYWluLnB5IHtpcH0ge3Nl
 
 结果导出
 
-![image-20220318182520843](./writesup.assets/image-20220318182520843.png)
+![image-20220318182520843](https://c.img.dasctf.com/images/202246/1649223129857-98fcb4f3-5623-4bf5-992d-378f5b54f1be.png)
 
 保存为 icmp.data.json
 
@@ -131,7 +131,7 @@ cat icmp.data.json|grep data.data|cut -d "\"" -f 4
 
 看看开头 可以发现重复部分
 
-![image-20220318183228672](./writesup.assets/image-20220318183228672.png)
+![image-20220318183228672](https://c.img.dasctf.com/images/202246/1649223155662-b9c1bf87-0f30-4eee-bee1-596b97a8be5f.png)
 
 `41:d8:8d:14:43:56:6c:ad:ee:55:00:4e:de:ad:be:ef`
 
@@ -141,7 +141,7 @@ cat icmp.data.json|grep data.data|cut -d "\"" -f 4
 
 这时候留意下结尾看看是不是也有相关的内容
 
-![image-20220318183405591](./writesup.assets/image-20220318183405591.png)
+![image-20220318183405591](https://c.img.dasctf.com/images/202246/1649223174302-a89c29ae-b515-42a2-a1b8-77062f59228c.png)
 
 不出意外确实也有
 
@@ -174,7 +174,7 @@ print "`cat process2`" > data.zip # 拿到原先的 文件 jenkins_secret.zip
 
 
 
-![image-20220319124555895](./writesup.assets/image-20220319124555895.png)
+![image-20220319124555895](https://c.img.dasctf.com/images/202246/1649223250175-8e292fb8-d026-4ea8-b1fc-3c3728bf911e.png)
 
 
 
@@ -196,19 +196,19 @@ print "`cat process2`" > data.zip # 拿到原先的 文件 jenkins_secret.zip
 
 `Esonhugh @github` 和 ` Esonhugh/secret_source_code`
 
-![image-20220319125235457](./writesup.assets/image-20220319125235457.png)
+![image-20220319125235457](https://c.img.dasctf.com/images/202246/1649223281426-1060a319-e1d4-4457-a9a5-f5df4fd85de5.png)
 
 简单的看一下 log 和 branch 能够发现
 
-![image-20220319125357072](./writesup.assets/image-20220319125357072.png)
+![image-20220319125357072](https://c.img.dasctf.com/images/202246/1649223300574-a2975b00-cecc-4c6a-bb42-f21e74048fc3.png)
 
 flag 就存放在 upload source code 1 这里
 
 而不是 flag (读取 flag 的两个分支 会得到 never gonna give you up)
 
-![image-20220319125701249](./writesup.assets/image-20220319125701249.png)
+![image-20220319125701249](https://c.img.dasctf.com/images/202246/1649223326630-ecf0faee-fb5e-4549-b700-9828c4994144.png)
 
-![image-20220319125718898](./writesup.assets/image-20220319125718898.png)
+![image-20220319125718898](https://c.img.dasctf.com/images/202246/1649223370318-c4b83160-a6f9-4c99-8430-7e8b6e3036df.png)
 
 flag 就在最底下 (你们还是被骗了 Doge)
 
@@ -216,11 +216,11 @@ flag 就在最底下 (你们还是被骗了 Doge)
 
 或者直接 jetbrains IDE 打开
 
-![](./writesup.assets/image-20220319130226984.png)
+![image-20220319130226984.png](https://c.img.dasctf.com/images/202246/1649223397312-eefb9a24-d50a-41ce-92da-f818b6f87aee.png)
 
 检查一下历史变更就可以了
 
-![image-20220319130827384](./writesup.assets/image-20220319130827384.png)
+![](https://c.img.dasctf.com/images/202246/1649223423668-359a9f73-5ebf-4e2d-92e3-0746df92c44a.png)
 
 flag `DASCTF{Oh!_H4ck_f0r_c0d3s-and_4buse_1t}`
 
